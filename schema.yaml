@@ -42,7 +42,7 @@ paths:
           content:
             'application/json':
               schema:
-                $ref: "#/Payment"
+                $ref: "#/components/Payment"
       tags:
         - Create Payment
     get:
@@ -53,7 +53,7 @@ paths:
           content:
             'application/json':
               schema:
-                $ref: "#/Payment"
+                $ref: "#/components/Payment"
       tags:
         - Create Payment
   /payments/{payment}/pay:
@@ -64,7 +64,7 @@ paths:
         content:
           'application/json':
             schema:
-              $ref: "#/Payment"
+              $ref: "#/components/Payment"
       responses:
         '200':
           description: Payment processed.
