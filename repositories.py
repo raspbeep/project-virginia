@@ -7,18 +7,20 @@ current_path = pathlib.Path(os.getcwd())
 DB_FILE = str(current_path.parent) + '/db/db.sqlite3'
 
 class RepositoryI:
+    """
+    Interface for repository object
+    """
     def save(self, payment: models.Payment):
-        raise NotImplementedError('Directly calling interface')
+        raise NotImplementedError
 
     def load(self):
-        raise NotImplementedError('Directly calling interface')
+        raise NotImplementedError
 
 class  SQLiteRepository(RepositoryI): 
     def save(self, payment: models.Payment):
         """
         Save (or update) payment in database
         """
-        
         connection = sqlite3.connect(DB_FILE)
         c = connection.cursor()
 
@@ -37,7 +39,7 @@ class  SQLiteRepository(RepositoryI):
     def load(self) -> models.Payment:
         """
         Returns:
-            List of all payments
+            List of all payment objects
         """
         connection = sqlite3.connect(DB_FILE)
         connection.row_factory = sqlite3.Row
