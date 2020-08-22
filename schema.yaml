@@ -47,18 +47,15 @@ paths:
         - Create Payment
     get:
       summary: Processed payments.
-        requestBody:
-          required: true
+      responses:
+        '200':
+          description: Payment object created.
           content:
-        responses:
-          '200':
-            description: Payment object created.
-            content:
-              'application/json':
-                schema:
-                  $ref: "#/Payments"
-        tags:
-          - Create Payment
+            'application/json':
+              schema:
+                $ref: "#/Payments"
+      tags:
+        - Create Payment
   /payments/{payment}/pay:
     post:
       summary: Make payment
