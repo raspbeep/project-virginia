@@ -72,8 +72,9 @@ paths:
       tags:
         - Make Payment.
 
-Payment:
-  type: object
+components:
+  Payment:
+    type: object
     properties:
       value:
         type: string
