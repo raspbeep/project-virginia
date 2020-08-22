@@ -5,25 +5,25 @@ from pathlib import Path
 current_path = Path(os.getcwd())
 DB_FILE = str(current_path.parent) + "/db/db.sqlite3"
 
+''' connection to sqlite3 database, OperationalError is raised when the database in not reachable '''
 def connect_to_database():
-	conn = None
 	try:
-		conn = sqlite3.connect(DB_FILE)
+		connection = sqlite3.connect(DB_FILE)
 	except sqlite3.OperationalError as e:
-		print("Cound not connect to database")
-		raise sqlite3.OperationalError
-	return conn
+		raise e
+	return connection
 
+''' create a database with 2 tables, the SQL statements are in this function '''
+''' the created database is in the db folder'''
 def create_database():
 	try:
-		conn = connect_to_database()
+		connection = connect_to_database()
 	except sqlite3.OperationalError as e:
-		print("Could not create the database")
-		exit(-1)
+		raise e
 
-	cur = conn.cursor()
+	cursor = connection.cursor()
 
-	cur.executescript(
+	cursor.executescript(
 	'''CREATE TABLE IF NOT EXISTS statuses (
 		id integer PRIMARY KEY,
 		name text NOT NULL);
@@ -42,13 +42,19 @@ def create_database():
     	status integer NOT NULL,
     	FOREIGN KEY(status) REFERENCES statuses (id) );''')
 
+	connection.commit()
+	connection.close()
 
+'''deleting the database, do not use this just when you need to delete the database'''
 def delete_database():
 	try:
-		conn = connect_to_database()
+		connection = connect_to_database()
 	except sqlite3.OperationalError as e:
-		print("Could not delete the database")
-		exit(-1)
+		raise e
 
-	cur = conn.cursor()
-	cur.executescript("DROP TABLE payments; DROP TABLE statuses;")
+	cursor = connection.cursor()
+	cursor.executescript("DROP TABLE payments; DROP TABLE statuses;")
+	connection.commit()
+	connection.close()
+
+create_database()
