@@ -18,13 +18,35 @@ class  SQLiteRepository(RepositoryI):
         """
         Save (or update) payment in database
         """
+        
         connection = sqlite3.connect(DB_FILE)
         c = connection.cursor()
 
-        c.execute(
-            "INSERT OR REPLACE INTO payments (id, value, currency, transaction_id, created_at, status) VALUES (?, ?, ?, ?, ?, ?)",
-            (payment.id, payment.money.get_value(), payment.money.get_currency(), payment.transaction_id, payment.created_at, payment.status)
-        )
+        c.execute("SELECT COUNT(*) FROM payments WHERE id = ?", payment.id)
+        # Payment doesn't exist, create new one
+        if (c.fetchone()[0] == 0):
+            c.execute(
+                '''
+                INSERT INTO payments (id, value, currency, transaction_id, created_at, status)
+                VALUES (?, ?, ?, ?, ?, ?)
+                ''',
+                (payment.id, payment.money.get_value(), payment.money.get_currency(), payment.transaction_id, payment.created_at, payment.status)
+            )
+        # If payment already exists, update it
+        else:
+            c.execute(
+                '''
+                UPDATE payments
+                SET id = ?, 
+                    value = ?,
+                    currency = ?,
+                    transaction_id = ?,
+                    created_at= ?,
+                    status = ?
+                ''',
+                (payment.id, payment.money.get_value(), payment.money.get_currency(), payment.transaction_id, payment.created_at, payment.status)
+            )
+        
         connection.commit()
 
         connection.close()
