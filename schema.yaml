@@ -11,10 +11,9 @@ servers:
       basePath:
         default: ""
 paths:
-  /Create Payment:
+  /payments:
     post:
       summary: Create a payment.
-      requestBody:
         required: true
         content:
           'application/json':
@@ -44,13 +43,19 @@ paths:
               schema:
                 type: object
                 properties:
-                  payment_object:
-                    type: object
-                  required:
-                    - payment_object
+                  value:
+                    type: string
+                  currency:
+                    type: string
+                  transaction_id:
+                    type: string
+                    format: UUID
+                    nullable: true
+                required:
+                  - payment_object
       tags:
         - Create Payment
-  /Make Payment:
+  /payments/{payment}/pay:
     post:
       summary: Make payment
       requestBody:
@@ -74,7 +79,7 @@ paths:
                 properties:
                   payment_object:
                     type: object
-                  required:
+                required:
                     - payment_object
       tags:
         - Make Payment.
