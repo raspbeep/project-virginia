@@ -11,9 +11,9 @@ servers:
       basePath:
         default: ""
 paths:
-  /v1/charge:
+  /Create Payment:
     post:
-      summary: Make payment in one single step.
+      summary: Create a payment.
       requestBody:
         required: true
         content:
@@ -21,9 +21,6 @@ paths:
             schema:
               type: object
               properties:
-                reference:
-                  description: Reference for client to track transaction.
-                  type: string
                 amount:
                   type: string
                 currency:
@@ -31,6 +28,7 @@ paths:
                   type: string
                   minLength: 3
                   maxLength: 3
+                  nullable: true
                   default: EUR
               required:
                 - amount
@@ -40,22 +38,21 @@ paths:
                 currency: SEK
       responses:
         '200':
-          description: Payment successful
+          description: Payment object created.
           content:
             'application/json':
               schema:
                 type: object
                 properties:
-                  transaction_id:
-                    type: string
-                    format: UUID
+                  payment_object:
+                    type: object
                   required:
-                    - transaction_id
+                    - payment_object
       tags:
-        - Provider-1
-  /v2/authorize:
+        - Create Payment
+  /Make Payment:
     post:
-      summary: Authorize payment. Money are blocked on user account but not transfered.
+      summary: Make payment
       requestBody:
         required: true
         content:
@@ -63,116 +60,21 @@ paths:
             schema:
               type: object
               properties:
-                merchant:
-                  description: Merchant name
-                  type: string
-                amount_of_money:
-                  description: Amount of money you want to pay in cents(or other currency equivalent)
+                payment_object:
                   type: object
-                  properties:
-                    amount:
-                      type: integer
-                    currency:
-                      type: string
-                  required:
-                    - amount
-                    - currency
               required:
-                - merchant
-                - amount_of_money
+                - payment_object
       responses:
         '200':
-          description: Payment authorized.
-          content:
-            'application/json':
-              schema:
-                type: object
-                propreties:
-                  payment_reference:
-                    type: string
-                    format: UUID
-                  required:
-                    - payment_reference
-      tags:
-        - Provider-2
-  /v2/capture:
-    post:
-      summary: Charge authorized payment. Notify a Bank that it can transfer money.
-      requestBody:
-        required: true
-        content:
-          'application/json':
-            schema:
-              type: object
-              properties:
-                payment_reference:
-                  type: string
-                  format: UUID
-                required:
-                  - payment_reference
-      responses:
-        '200':
-          description: Payment charged.
-      tags:
-        - Provider-2
-  /v3/authorize:
-    post:
-      summary: Authorize payment. Money are blocked on user account but not transfered.
-      requestBody:
-        required: true
-        content:
-          'application/json':
-            schema:
-              type: object
-              properties:
-                amount:
-                  type: string
-                currency:
-                  description: Currency code as defined in ISO-4217
-                  type: string
-              required:
-                - amount
-                - currency
-      responses:
-        '200':
-          description: Payment authorized.
-          content:
-            'application/json':
-              schema:
-                type: object
-                propreties:
-                  status:
-                    description: Status of payment operation
-                    type: integer
-                  payment_id:
-                    type: string
-                    format: UUID
-                  required:
-                    - status
-      tags:
-        - Provider-3
-  /v3/capture/{payment_id}:
-    post:
-      summary: Charge authorized payment. Notify a Bank that it can transfer money.
-      parameters:
-        - name: payment_id
-          in: path
-          required: true
-          schema:
-            type: string
-            format: UUID
-      responses:
-        '200':
-          description: Payment charged.
+          description: Payment processed.
           content:
             'application/json':
               schema:
                 type: object
                 properties:
-                  status:
-                    description: Status of payment operation
-                    type: integer
-                required:
-                  - status
+                  payment_object:
+                    type: object
+                  required:
+                    - payment_object
       tags:
-        - Provider-3
+        - Make Payment.
