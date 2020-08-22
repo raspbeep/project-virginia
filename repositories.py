@@ -22,9 +22,9 @@ class  SQLiteRepository(RepositoryI):
         Save (or update) payment in database
         """
         connection = sqlite3.connect(DB_FILE)
-        c = connection.cursor()
+        cursor = connection.cursor()
 
-        c.execute(
+        cursor.execute(
             '''
             INSERT OR REPLACE INTO payments (id, value, currency, transaction_id, created_at, status)
             VALUES (?, ?, ?, ?, ?, ?)
@@ -42,12 +42,12 @@ class  SQLiteRepository(RepositoryI):
         """
         connection = sqlite3.connect(DB_FILE)
         connection.row_factory = sqlite3.Row
-        c = connection.cursor()
+        cursor = connection.cursor()
 
-        c.execute(
+        cursor.execute(
             'SELECT * FROM payments'
         )
-        query_list = c.fetchall()
+        query_list = cursor.fetchall()
 
         all_payments = []
         
