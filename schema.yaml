@@ -52,6 +52,10 @@ paths:
                     type: string
                     format: UUID
                     nullable: true
+                  status:
+                    type: string
+                  created_at:
+                    type: string
                 required:
                   - payment_object
       tags:
@@ -66,21 +70,23 @@ paths:
             schema:
               type: object
               properties:
-                payment_object:
-                  type: object
+                value:
+                  type: string
+                currency:
+                  type: string
+                transaction_id:
+                  type: string
+                  format: UUID
+                  nullable: true
+                status:
+                  type: string
+                created_at:
+                  type: string
               required:
                 - payment_object
       responses:
         '200':
           description: Payment processed.
           content:
-            'application/json':
-              schema:
-                type: object
-                properties:
-                  payment_object:
-                    type: object
-                required:
-                    - payment_object
       tags:
         - Make Payment.
