@@ -22,30 +22,13 @@ class  SQLiteRepository(RepositoryI):
         connection = sqlite3.connect(DB_FILE)
         c = connection.cursor()
 
-        c.execute("SELECT COUNT(*) FROM payments WHERE id = ?", payment.id)
-        # Payment doesn't exist, create new one
-        if (c.fetchone()[0] == 0):
-            c.execute(
-                '''
-                INSERT INTO payments (id, value, currency, transaction_id, created_at, status)
-                VALUES (?, ?, ?, ?, ?, ?)
-                ''',
-                (payment.id, payment.money.get_value(), payment.money.get_currency(), payment.transaction_id, payment.created_at, payment.status)
-            )
-        # If payment already exists, update it
-        else:
-            c.execute(
-                '''
-                UPDATE payments
-                SET id = ?, 
-                    value = ?,
-                    currency = ?,
-                    transaction_id = ?,
-                    created_at= ?,
-                    status = ?
-                ''',
-                (payment.id, payment.money.get_value(), payment.money.get_currency(), payment.transaction_id, payment.created_at, payment.status)
-            )
+        c.execute(
+            '''
+            INSERT OR REPLACE INTO payments (id, value, currency, transaction_id, created_at, status)
+            VALUES (?, ?, ?, ?, ?, ?)
+            ''',
+            (payment.id, payment.money.get_value(), payment.money.get_currency(), payment.transaction_id, payment.created_at, payment.status)
+        )
         
         connection.commit()
 
@@ -61,7 +44,7 @@ class  SQLiteRepository(RepositoryI):
         c = connection.cursor()
 
         c.execute(
-            "SELECT * FROM payments"
+            'SELECT * FROM payments'
         )
         query_list = c.fetchall()
 
@@ -69,13 +52,13 @@ class  SQLiteRepository(RepositoryI):
         
         for row in query_list:
             current_payment = models.Payment(
-                value = row["value"],
-                currency = row["currency"],
-                transaction_id = row["transaction_id"],
-                created_at = row["created_at"],
-                status = row["status"]
+                value = row['value'],
+                currency = row['currency'],
+                transaction_id = row['transaction_id'],
+                created_at = row['created_at'],
+                status = row['status']
             )
-            current_payment.id = row["id"]
+            current_payment.id = row['id']
 
             all_payments.append(current_payment)
 
