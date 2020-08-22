@@ -14,7 +14,7 @@ paths:
   /payments:
     post:
       summary: Create a payment.
-        requestBody:
+      requestBody:
         required: true
         content:
           'application/json':
