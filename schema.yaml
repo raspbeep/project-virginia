@@ -72,8 +72,8 @@ paths:
       tags:
         - Make Payment.
 
- Payment:
-   type: object
+Payment:
+  type: object
     properties:
       value:
         type: string
@@ -87,5 +87,5 @@ paths:
         type: string
       created_at:
         type: string
-    required:
-      - payment_object
+  required:
+    - payment_object
