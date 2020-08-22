@@ -33,13 +33,12 @@ class  SQLiteRepository(RepositoryI):
         )
         
         connection.commit()
-
         connection.close()
     
     def load(self) -> models.Payment:
         """
         Returns:
-            List of all payment objects
+            Tuple of all payment objects
         """
         connection = sqlite3.connect(DB_FILE)
         connection.row_factory = sqlite3.Row
@@ -66,5 +65,5 @@ class  SQLiteRepository(RepositoryI):
 
         connection.close()
 
-        return all_payments
+        return tuple(all_payments)
 
